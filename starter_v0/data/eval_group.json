@@ -2,7 +2,14 @@
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
   "cases": [
     {
       "id": "G01_wikipedia_person",
@@ -31,7 +38,7 @@
       "phase": "B",
       "suite": "group",
       "query": "Định nghĩa Mạng nơ-ron nhân tạo (Artificial Neural Network) trên Wikipedia",
-      "failure_type": "wrong_tool",
+      "failure_type": "wrong_arg_value",
       "expect": {
         "tool_calls": [
           {
@@ -53,17 +60,26 @@
       "phase": "B",
       "suite": "group",
       "turns": [
-        {"role": "user", "content": "Tra cứu giúp mình thông tin trên Wikipedia"},
-        {"role": "user", "content": "Về định lý Pythagoras nhé"},
-        {"role": "user", "content": "Đúng rồi, tra cứu định lý Pythagoras trên Wikipedia giúp mình"}
+        {
+          "role": "user",
+          "content": "Tra cứu giúp mình thông tin trên Wikipedia"
+        },
+        {
+          "role": "user",
+          "content": "Về định lý Pythagoras nhé"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, tra cứu định lý Pythagoras trên Wikipedia giúp mình"
+        }
       ],
-      "failure_type": "missing_info",
+      "failure_type": "wrong_arg_value",
       "expect": {
         "tool_calls": [
           {
             "name": "wikipedia",
             "args": {
-              "query": "Pythagoras"
+              "query": "Pythagorean theorem"
             }
           }
         ]
@@ -72,6 +88,196 @@
         "skill": "multiturn_wikipedia_carryover",
         "difficulty": "hard",
         "what_it_tests": "Multi-turn: ban đầu chưa nói tra cứu gì, sau đó bổ sung chủ đề Pythagoras -> gọi wikipedia."
+      }
+    },
+    {
+      "id": "G04_wikipedia_parenthetical_translation",
+      "phase": "B",
+      "suite": "group",
+      "query": "Search Wikipedia for Machine Learning (Học máy).",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Machine Learning"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_parenthetical_translation",
+        "difficulty": "medium",
+        "what_it_tests": "Uses the English title in parentheses for the Wikipedia query."
+      }
+    },
+    {
+      "id": "G05_wikipedia_history",
+      "phase": "B",
+      "suite": "group",
+      "query": "Search Wikipedia for the Industrial Revolution as an encyclopedic history topic.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Industrial Revolution"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_history",
+        "difficulty": "easy",
+        "what_it_tests": "Routes an encyclopedic history request to Wikipedia instead of web news."
+      }
+    },
+    {
+      "id": "G06_wikipedia_scientist",
+      "phase": "B",
+      "suite": "group",
+      "query": "Search Wikipedia for Marie Curie.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Marie Curie"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_scientist",
+        "difficulty": "easy",
+        "what_it_tests": "Routes a famous scientist lookup to Wikipedia."
+      }
+    },
+    {
+      "id": "G07_wikipedia_clarify_topic",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tra cứu trên Wikipedia giúp mình."
+        },
+        {
+          "role": "user",
+          "content": "Về Alan Turing."
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Alan Turing"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_clarify_topic",
+        "difficulty": "medium",
+        "what_it_tests": "Carries the topic from a later turn."
+      }
+    },
+    {
+      "id": "G08_wikipedia_latest_topic",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Please use Wikipedia to look up an encyclopedic topic."
+        },
+        {
+          "role": "user",
+          "content": "The topic is Artificial Intelligence."
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Artificial Intelligence"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_latest_topic",
+        "difficulty": "medium",
+        "what_it_tests": "Uses the clarified topic in the Wikipedia query."
+      }
+    },
+    {
+      "id": "G09_wikipedia_correction",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Search Wikipedia for Python."
+        },
+        {
+          "role": "user",
+          "content": "Correction: search Wikipedia for Java instead."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Java"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_correction",
+        "difficulty": "medium",
+        "what_it_tests": "Uses the newest corrected topic."
+      }
+    },
+    {
+      "id": "G10_wikipedia_explicit_source",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Look up the topic of neural networks."
+        },
+        {
+          "role": "user",
+          "content": "Use Wikipedia, and search for Artificial Neural Network exactly."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Artificial Neural Network"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "wikipedia_explicit_source",
+        "difficulty": "easy",
+        "what_it_tests": "Routes an explicit Wikipedia request and preserves the specified query."
       }
     }
   ]
