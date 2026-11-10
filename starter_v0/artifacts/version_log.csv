@@ -1,1 +1,5 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_before,metric_after,run_file
+v0,team,baseline,v0+pa7684d275238+t8f291757f40b,a7684d275238,8f291757f40b,baseline,Đo hành vi ban đầu chưa tối ưu của starter prompt,,0.70,runs/v0_B_base_openrouter_20261110T104233978027.json
+v1,team,system_prompt.md,v1+p1c8ed4e410d9+t8f291757f40b,1c8ed4e410d9,8f291757f40b,Xóa anti-patterns và thêm routing rules,Bỏ chỉ dẫn đoán mò và ép 1 bước giúp tăng khả năng chọn tool chính xác,0.70,0.95,runs/v1_B_base_openrouter_20261110T104623444611.json
+v2,team,system_prompt.md,v2+pacb6f4e95f7a+t8f291757f40b,acb6f4e95f7a,8f291757f40b,Bổ sung quy tắc đa lượt và tích hợp tool Wikipedia,Thêm tool wikipedia và hướng dẫn lọc từ khóa query cho lookup,0.95,0.95,runs/v2_B_base_openrouter_20261110T104917319258.json
+v3,team,system_prompt.md,v3+pc622fb6331a1+t8f291757f40b,c622fb6331a1,8f291757f40b,Hoàn thiện ranh giới chuyển đổi tool trong multi-turn,Xử lý dứt khoát khi user đổi nguồn tin (bỏ Twitter sang web) giúp đạt độ chính xác tuyệt đối,0.95,1.00,runs/v3_B_base_openrouter_20261110T105208235671.json

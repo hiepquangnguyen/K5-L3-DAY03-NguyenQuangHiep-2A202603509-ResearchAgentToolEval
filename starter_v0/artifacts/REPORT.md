@@ -54,19 +54,20 @@ Fill from `artifacts/version_log.csv` and `runs/*.json`.
 
 | Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
 |---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |
-| v1 |  |  |  |  |  |
-| v2 |  |  |  |  |  |
-| v3 |  |  |  |  |  |
-
+| v0 | baseline | Đo đạc hành vi ban đầu khi prompt còn chứa anti-pattern đoán mò | - | 0.70 | runs/v0_B_base_openrouter_20261110T104233978027.json |
+| v1 | system_prompt.md | Xóa bỏ anti-patterns (đoán mò, tự gửi) và thêm quy tắc routing rõ ràng | 0.70 | 0.95 | runs/v1_B_base_openrouter_20261110T104623444611.json |
+| v2 | system_prompt.md + tools.yaml | Bổ sung tool Wikipedia và tinh chỉnh quy tắc lọc query cho lookup | 0.95 | 0.95 | runs/v2_B_base_openrouter_20261110T104917319258.json |
+| v3 | system_prompt.md | Xử lý ranh giới chuyển đổi tool trong hội thoại đa lượt (multi-turn) | 0.95 | 1.00 | runs/v3_B_base_openrouter_20261110T105208235671.json |
 ## B2. Failure Analysis
 
 Use actual failures from `results[*].result.failures`.
 
 | Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
 |---|---|---|---|---|
-|  |  |  |  |  |
-
+| `R10_missing_handle` | missing_info | `timeline(screenname='sama')` | User hỏi "Tóm tắt 5 tweet mới nhất" nhưng không nêu tên tài khoản. Prompt v0 xúi đoán mò nên model tự bịa ra Sam Altman. | Xóa chỉ dẫn đoán mò, bắt buộc gọi `clarify(response_type='text')` để xin tên tài khoản khi thiếu thông tin. |
+| `R12_confirm_before_send` | wrong_boundary | `send(text='...', confirmed=False)` | User yêu cầu "Đăng bản tin lên Telegram", model ở v0 tự ý gọi tool `send` khi chưa có xác nhận từ người dùng. | Thêm quy tắc bảo vệ: hành động ghi/gửi bài bắt buộc gọi `clarify(response_type='yes_no')` để người dùng xác nhận trước. |
+| `R08_out_of_scope` | out_of_scope | `lookup(query='nguyên hàm x^2')` | User hỏi bài toán tích phân, model ở v0 cố gắng gọi tool tìm kiếm thay vì từ chối. | Bổ sung quy tắc Out-of-scope: với các yêu cầu giải toán, viết code ngoài phạm vi research thì từ chối trực tiếp và KHÔNG gọi tool. |
+| `M06_switch_tool` | wrong_tool | `lookup(...)` + `social_search(...)` | Ở v1/v2, trong hội thoại 3 lượt khi user bảo "Bỏ Twitter, chuyển sang tìm web tin tức", model bị nhầm với quy tắc gọi song song nên gọi cả hai tool. | Sửa Rule 10 trong prompt: nhấn mạnh khi người dùng chuyển đổi nguồn tin (bỏ Twitter), dứt khoát chỉ gọi duy nhất `lookup`. |
 ## B3. Team Eval Cases
 
 List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn).

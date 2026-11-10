@@ -3,5 +3,76 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wikipedia_person",
+      "phase": "B",
+      "suite": "group",
+      "query": "Alan Turing là ai theo bách khoa toàn thư Wikipedia?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Alan Turing"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_wikipedia_person",
+        "difficulty": "easy",
+        "what_it_tests": "Tra cứu tiểu sử nhân vật lịch sử trên bách khoa toàn thư -> route vào wikipedia."
+      }
+    },
+    {
+      "id": "G02_wikipedia_concept",
+      "phase": "B",
+      "suite": "group",
+      "query": "Định nghĩa Mạng nơ-ron nhân tạo (Artificial Neural Network) trên Wikipedia",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Artificial Neural Network"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_wikipedia_concept",
+        "difficulty": "medium",
+        "what_it_tests": "Tra cứu khái niệm khoa học nền tảng -> route vào wikipedia, không nhầm sang web news."
+      }
+    },
+    {
+      "id": "G03_wikipedia_multiturn",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra cứu giúp mình thông tin trên Wikipedia"},
+        {"role": "user", "content": "Về định lý Pythagoras nhé"},
+        {"role": "user", "content": "Đúng rồi, tra cứu định lý Pythagoras trên Wikipedia giúp mình"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Pythagoras"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_wikipedia_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "Multi-turn: ban đầu chưa nói tra cứu gì, sau đó bổ sung chủ đề Pythagoras -> gọi wikipedia."
+      }
+    }
+  ]
 }
