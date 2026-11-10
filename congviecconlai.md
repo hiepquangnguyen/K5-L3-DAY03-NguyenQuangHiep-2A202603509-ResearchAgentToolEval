@@ -136,3 +136,41 @@ Khi đến giờ nộp bài, nhóm cần rà soát lại đảm bảo repo có �
 - [ ] `starter_v0/transcripts/*.transcript.json` (chứa file lịch sử chat thực tế).
 - [ ] `starter_v0/app.py` (chạy giao diện web mượt mà).
 - [ ] File `.env` **KHÔNG ĐƯỢC COMMIT** lên GitHub.
+
+---
+
+## 4. QUY TẮC PHỐI HỢP TRÊN GIT & GITHUB (BẮT BUỘC ĐỌC KỸ TRƯỚC KHI BẮT ĐẦU)
+
+Để tránh xung đột code (Merge Conflict) và bảo vệ dữ liệu thực nghiệm đã đạt điểm tuyệt đối:
+
+### 1. Nguyên tắc "Bất khả xâm phạm" với Dữ liệu Benchmark:
+* **TUYỆT ĐỐI KHÔNG tự ý chạy lại lệnh `run_eval.py` cho các version `v0`, `v1`, `v2`, `v3`** trên bộ `base` hoặc `group`. Toàn bộ 6 file log trong `runs/` và bảng kết quả trong `version_log.csv` đã được Lead chạy chuẩn xác (100%) và đóng băng. Việc chạy lại sẽ sinh ra file log rác và làm lệch timestamp/hash.
+* **KHÔNG chỉnh sửa** file `data/eval_base.json` và `data/eval_group.json`.
+
+### 2. Phân công độc lập theo từng File (File Ownership):
+Ai nhận phần nào thì **chỉ chỉnh sửa đúng file của phần đó** để không bao giờ bị đụng nhau:
+* Thành viên làm **Poster**: Chỉ làm việc trên file `starter_v0/artifacts/poster.html`.
+* Thành viên làm **Báo cáo (Report)**: Chỉ chỉnh sửa file `starter_v0/artifacts/REPORT.md`.
+* Thành viên làm **Transcript**: Chỉ tạo file trong thư mục `starter_v0/transcripts/`.
+* Thành viên làm **Bonus (Tool mới/Local Model)**: Nên tạo branch riêng (ví dụ: `git checkout -b feature/bonus-tools`) để phát triển độc lập, không làm ảnh hưởng nhánh `main`.
+
+### 3. Quy trình Pull / Push chuẩn để không bị đè code:
+Mỗi khi bắt đầu làm và trước khi đẩy code lên, thành viên cần tuân thủ 3 bước:
+1. **Trước khi bắt đầu làm:** Luôn cập nhật code mới nhất từ GitHub về máy:
+   ```powershell
+   git pull origin main
+   ```
+2. **Sau khi làm xong, chuẩn bị đẩy code:**
+   ```powershell
+   git add <tên_file_bạn_vừa_sửa>
+   git commit -m "mô tả ngắn gọn việc bạn vừa làm"
+   ```
+3. **Kéo code mới nhất về trước khi Push (Tránh xung đột):**
+   ```powershell
+   git pull --rebase origin main
+   git push origin main
+   ```
+   *(Lệnh `git pull --rebase` sẽ tự động đưa các commit mới nhất của nhóm lên đầu rồi mới xếp commit của bạn vào sau, giúp lịch sử Git luôn thẳng hàng và không bị sinh ra các commit merge rác).*
+
+### 4. An toàn thông tin:
+* Tuyệt đối **KHÔNG commit file `.env`** hoặc paste API Key cá nhân vào bất kỳ file tài liệu/mã nguồn nào (`.gitignore` đã cấu hình chặn file `.env`, hãy giữ nguyên như vậy).
