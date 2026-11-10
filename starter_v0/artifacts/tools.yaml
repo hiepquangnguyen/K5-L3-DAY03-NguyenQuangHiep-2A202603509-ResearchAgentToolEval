@@ -1,66 +1,52 @@
-# starter_v0 — tool declarations (intentionally vague).
-# Names and descriptions here are a rough first draft. Routing rules, name->handle
-# mapping, arg conventions (news/timeframe/Top), and the send-confirmation boundary
-# are NOT spelled out anywhere yet. Your job is to make these declarations + the
-# system prompt good enough that the agent routes correctly on the eval.
-#
-# If you rename a tool, keep the name in sync across:
-#   this file  ->  tools/__init__.py (TOOL_FUNCTIONS)  ->  data/eval_base.json + data/eval_research_extension.json
-# `pytest tests/test_tool_contract.py` checks this sync for you.
-#
-# TODO(student):
-#   - Rewrite every description: what it does, WHEN to use it, WHEN NOT to use it.
-#   - Spell out arg conventions in parameter descriptions (handle format, topic/timeframe, search_type).
-#   - Make the `send` confirmation boundary explicit.
-#   - Declare your new tool(s) at the end of this file.
+# v1: core routing and argument conventions; send boundary changes are deferred to v2.
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Ask for missing information before choosing a tool. Use when the account or article URL is unknown; do not guess or ask again for known details."
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        question: {type: string, default: "", description: "Specific question about the missing detail."}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "text for missing details; yes_no for confirmation; choice for explicit options."}
+        options: {type: array, default: [], items: {type: string}, description: "Options for response_type=choice; otherwise leave empty."}
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Get tweets FROM one identified account. Use social_search for tweets ABOUT a topic. Ask with clarify if the account is missing or ambiguous."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        screenname: {type: string, default: "", description: "Handle without @ or profile URL: sama, elonmusk, karpathy. Never invent an account."}
+        limit: {type: integer, default: 5, description: "Requested number of tweets; default 5 if unspecified."}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Search tweets ABOUT a topic. Use timeline for recent tweets from a specific account."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        query: {type: string, default: "", description: "Topic or search expression from the conversation."}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Latest for recent tweets; Top for popular or most-liked tweets. Exact capitalization required."}
+        limit: {type: integer, default: 5, description: "Requested number of tweets; default 5 if unspecified."}
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Search web information or news. Use fetch for an article URL already supplied, and social_search for Twitter discussions."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
-        max_results: {type: integer, default: 5, description: "Số kết quả"}
+        query: {type: string, default: "", description: "Requested topic, e.g. AI. Do not append news; use topic=news instead."}
+        topic: {type: string, enum: [general, news], default: "general", description: "news for news requests; general otherwise. Set news explicitly for news."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "day=today or last 24 hours; week=last week; month=last month; year=last year. Default week if unspecified."}
+        max_results: {type: integer, default: 5, description: "Requested maximum results; default 5 if unspecified."}
       required: [query]
 
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: "Read or summarize a specific HTTP(S) URL from the conversation. Ask with clarify if the URL and article content are missing; never fabricate a URL."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: {type: string, default: "", description: "Preserve the supplied HTTP(S) URL including its path and query parameters."}
       required: [url]
 
   - name: format
