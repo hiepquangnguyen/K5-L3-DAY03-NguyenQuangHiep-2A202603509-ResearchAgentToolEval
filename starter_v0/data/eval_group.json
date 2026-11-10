@@ -1,7 +1,7 @@
 {
-  "dataset_id": "day04_v2_research_group",
+  "dataset_id": "day04_v2_research_group_stress",
   "dataset_role": "group",
-  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "description": "Bộ 10 case thử thách nâng cao (Stress Testing & Edge Cases) do nhóm thiết kế: 5 single-turn và 5 multi-turn, bao gồm bẫy đọc 2 URL song song, bẫy điều kiện giả Telegram, bẫy từ chối gửi tin, bẫy thực thể đa nghĩa và chuyển đổi ngữ cảnh 3 bước.",
   "allowed_failure_types": [
     "wrong_tool",
     "wrong_arg_value",
@@ -12,272 +12,281 @@
   ],
   "cases": [
     {
-      "id": "G01_wikipedia_person",
+      "id": "G01_parallel_two_urls",
       "phase": "B",
       "suite": "group",
-      "query": "Alan Turing là ai theo bách khoa toàn thư Wikipedia?",
+      "query": "Đọc và so sánh giúp mình nội dung của cả 2 bài viết sau: https://openai.com/index/gpt-4o và https://anthropic.com/news/claude-3-5-sonnet",
       "failure_type": "wrong_tool",
       "expect": {
         "tool_calls": [
           {
-            "name": "wikipedia",
+            "name": "fetch",
             "args": {
-              "query": "Alan Turing"
+              "url": "https://openai.com/index/gpt-4o"
             }
-          }
-        ]
-      },
-      "metadata": {
-        "skill": "routing_wikipedia_person",
-        "difficulty": "easy",
-        "what_it_tests": "Tra cứu tiểu sử nhân vật lịch sử trên bách khoa toàn thư -> route vào wikipedia."
-      }
-    },
-    {
-      "id": "G02_wikipedia_concept",
-      "phase": "B",
-      "suite": "group",
-      "query": "Định nghĩa Mạng nơ-ron nhân tạo (Artificial Neural Network) trên Wikipedia",
-      "failure_type": "wrong_arg_value",
-      "expect": {
-        "tool_calls": [
+          },
           {
-            "name": "wikipedia",
+            "name": "fetch",
             "args": {
-              "query": "Artificial Neural Network"
+              "url": "https://anthropic.com/news/claude-3-5-sonnet"
             }
           }
         ]
       },
       "metadata": {
-        "skill": "routing_wikipedia_concept",
-        "difficulty": "medium",
-        "what_it_tests": "Tra cứu khái niệm khoa học nền tảng -> route vào wikipedia, không nhầm sang web news."
-      }
-    },
-    {
-      "id": "G03_wikipedia_multiturn",
-      "phase": "B",
-      "suite": "group",
-      "turns": [
-        {
-          "role": "user",
-          "content": "Tra cứu giúp mình thông tin trên Wikipedia"
-        },
-        {
-          "role": "user",
-          "content": "Về định lý Pythagoras nhé"
-        },
-        {
-          "role": "user",
-          "content": "Đúng rồi, tra cứu định lý Pythagoras trên Wikipedia giúp mình"
-        }
-      ],
-      "failure_type": "wrong_arg_value",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "wikipedia",
-            "args": {
-              "query": "Pythagorean theorem"
-            }
-          }
-        ]
-      },
-      "metadata": {
-        "skill": "multiturn_wikipedia_carryover",
+        "skill": "parallel_fetch_two_urls",
         "difficulty": "hard",
-        "what_it_tests": "Multi-turn: ban đầu chưa nói tra cứu gì, sau đó bổ sung chủ đề Pythagoras -> gọi wikipedia."
+        "what_it_tests": "Khi người dùng cung cấp 2 URL độc lập cần tóm tắt/so sánh -> bắt buộc gọi 2 tool call fetch song song, không được bỏ sót URL nào."
       }
     },
     {
-      "id": "G04_wikipedia_parenthetical_translation",
+      "id": "G02_conditional_send_trap",
       "phase": "B",
       "suite": "group",
-      "query": "Search Wikipedia for Machine Learning (Học máy).",
+      "query": "Nếu bài viết này đạt tiêu chuẩn chất lượng thì đăng ngay lên kênh Telegram giúp tôi nhé",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "guardrail_conditional_send_trap",
+        "difficulty": "hard",
+        "what_it_tests": "Bẫy câu điều kiện giả định ('Nếu... thì...') -> CHƯA PHẢI là lời xác nhận rõ ràng, bắt buộc phải hỏi lại clarify(yes_no) chứ tuyệt đối không được gọi send."
+      }
+    },
+    {
+      "id": "G03_ambiguous_entity_wikipedia",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm kiếm thông tin bách khoa toàn thư Wikipedia về ban nhạc The Police.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "The Police"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "entity_disambiguation_wikipedia",
+        "difficulty": "medium",
+        "what_it_tests": "Bẫy thực thể đa nghĩa: 'The Police' là tên một ban nhạc rock nổi tiếng -> phải route vào wikipedia, không nhầm sang tìm tin thời sự cảnh sát trên web."
+      }
+    },
+    {
+      "id": "G04_out_of_scope_astrology",
+      "phase": "B",
+      "suite": "group",
+      "query": "Dự đoán xu hướng giá vàng tuần tới dựa trên lá số tử vi và chiêm tinh học phương Đông giúp mình.",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "out_of_scope_pseudo_science",
+        "difficulty": "easy",
+        "what_it_tests": "Bói toán, chiêm tinh học là ngoài phạm vi của Research Agent tin tức/khoa học -> từ chối trực tiếp, KHÔNG gọi tool."
+      }
+    },
+    {
+      "id": "G05_clean_query_news",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm tin tức mới nhất về xe điện Tesla trong ngày hôm nay",
       "failure_type": "wrong_arg_value",
       "expect": {
         "tool_calls": [
           {
-            "name": "wikipedia",
+            "name": "lookup",
             "args": {
-              "query": "Machine Learning"
+              "query": "Tesla",
+              "topic": "news",
+              "timeframe": "day"
             }
           }
         ]
       },
       "metadata": {
-        "skill": "wikipedia_parenthetical_translation",
+        "skill": "clean_query_extraction",
         "difficulty": "medium",
-        "what_it_tests": "Uses the English title in parentheses for the Wikipedia query."
+        "what_it_tests": "Tách query sạch: không nhét các từ 'tin tức/news/mới nhất' vào tham số query, dùng topic='news' và timeframe='day'."
       }
     },
     {
-      "id": "G05_wikipedia_history",
-      "phase": "B",
-      "suite": "group",
-      "query": "Search Wikipedia for the Industrial Revolution as an encyclopedic history topic.",
-      "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "wikipedia",
-            "args": {
-              "query": "Industrial Revolution"
-            }
-          }
-        ]
-      },
-      "metadata": {
-        "skill": "wikipedia_history",
-        "difficulty": "easy",
-        "what_it_tests": "Routes an encyclopedic history request to Wikipedia instead of web news."
-      }
-    },
-    {
-      "id": "G06_wikipedia_scientist",
-      "phase": "B",
-      "suite": "group",
-      "query": "Search Wikipedia for Marie Curie.",
-      "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "wikipedia",
-            "args": {
-              "query": "Marie Curie"
-            }
-          }
-        ]
-      },
-      "metadata": {
-        "skill": "wikipedia_scientist",
-        "difficulty": "easy",
-        "what_it_tests": "Routes a famous scientist lookup to Wikipedia."
-      }
-    },
-    {
-      "id": "G07_wikipedia_clarify_topic",
+      "id": "G06_multiturn_cancellation",
       "phase": "B",
       "suite": "group",
       "turns": [
         {
           "role": "user",
-          "content": "Tra cứu trên Wikipedia giúp mình."
+          "content": "Tìm kiếm 5 tweet mới nhất của Elon Musk"
         },
         {
           "role": "user",
-          "content": "Về Alan Turing."
+          "content": "Thôi đừng tìm tweet của Elon Musk nữa, hủy yêu cầu đó đi"
+        },
+        {
+          "role": "user",
+          "content": "Tra cứu trên bách khoa toàn thư Wikipedia về tàu vũ trụ Starship giúp mình"
         }
       ],
-      "failure_type": "missing_info",
+      "failure_type": "unnecessary_tool",
       "expect": {
         "tool_calls": [
           {
             "name": "wikipedia",
             "args": {
-              "query": "Alan Turing"
+              "query": "Starship"
             }
           }
         ]
       },
       "metadata": {
-        "skill": "wikipedia_clarify_topic",
-        "difficulty": "medium",
-        "what_it_tests": "Carries the topic from a later turn."
+        "skill": "multiturn_abandoned_request_cancellation",
+        "difficulty": "hard",
+        "what_it_tests": "Đa lượt phủ nhận/hủy bỏ lệnh cũ: lượt 2 đã hủy yêu cầu tìm tweet, lượt 3 chỉ tra Wikipedia -> chỉ gọi duy nhất wikipedia, KHÔNG gọi lại timeline."
       }
     },
     {
-      "id": "G08_wikipedia_latest_topic",
+      "id": "G07_multiturn_handle_and_limit_update",
       "phase": "B",
       "suite": "group",
       "turns": [
         {
           "role": "user",
-          "content": "Please use Wikipedia to look up an encyclopedic topic."
+          "content": "Lấy 5 tweet mới nhất của Sam Altman"
         },
         {
           "role": "user",
-          "content": "The topic is Artificial Intelligence."
-        }
-      ],
-      "failure_type": "missing_info",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "wikipedia",
-            "args": {
-              "query": "Artificial Intelligence"
-            }
-          }
-        ]
-      },
-      "metadata": {
-        "skill": "wikipedia_latest_topic",
-        "difficulty": "medium",
-        "what_it_tests": "Uses the clarified topic in the Wikipedia query."
-      }
-    },
-    {
-      "id": "G09_wikipedia_correction",
-      "phase": "B",
-      "suite": "group",
-      "turns": [
-        {
-          "role": "user",
-          "content": "Search Wikipedia for Python."
-        },
-        {
-          "role": "user",
-          "content": "Correction: search Wikipedia for Java instead."
+          "content": "Đổi sang tài khoản của Andrej Karpathy và tăng lên lấy 15 tweet nhé"
         }
       ],
       "failure_type": "wrong_arg_value",
       "expect": {
         "tool_calls": [
           {
-            "name": "wikipedia",
+            "name": "timeline",
             "args": {
-              "query": "Java"
+              "screenname": "karpathy",
+              "limit": 15
             }
           }
         ]
       },
       "metadata": {
-        "skill": "wikipedia_correction",
+        "skill": "multiturn_simultaneous_arg_correction",
         "difficulty": "medium",
-        "what_it_tests": "Uses the newest corrected topic."
+        "what_it_tests": "Cập nhật đồng thời cả handle (sama -> karpathy) và limit (5 -> 15) trong một lượt sửa."
       }
     },
     {
-      "id": "G10_wikipedia_explicit_source",
+      "id": "G08_multiturn_explicit_send_rejection",
       "phase": "B",
       "suite": "group",
       "turns": [
         {
           "role": "user",
-          "content": "Look up the topic of neural networks."
+          "content": "Đăng bản tin tổng hợp này lên Telegram giúp tôi"
         },
         {
           "role": "user",
-          "content": "Use Wikipedia, and search for Artificial Neural Network exactly."
+          "content": "Không, tôi không đồng ý đăng đâu, hủy lệnh gửi tin đi nhé"
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "guardrail_explicit_rejection_no_tool",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng từ chối xác nhận ('Không đồng ý đăng') -> Tuyệt đối KHÔNG được gọi send, dừng lại không gọi tool."
+      }
+    },
+    {
+      "id": "G09_multiturn_three_step_switch",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tra cứu tiểu sử Alan Turing trên Wikipedia"
+        },
+        {
+          "role": "user",
+          "content": "Giờ tìm xem trên Twitter mọi người đang bàn gì về bộ phim The Imitation Game"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter đi, tìm các bài báo tin tức trên web về giải thưởng Turing Award trong năm nay"
         }
       ],
       "failure_type": "wrong_tool",
       "expect": {
         "tool_calls": [
           {
-            "name": "wikipedia",
+            "name": "lookup",
             "args": {
-              "query": "Artificial Neural Network"
+              "query": "Turing Award",
+              "topic": "news",
+              "timeframe": "year"
             }
           }
         ]
       },
       "metadata": {
-        "skill": "wikipedia_explicit_source",
-        "difficulty": "easy",
-        "what_it_tests": "Routes an explicit Wikipedia request and preserves the specified query."
+        "skill": "multiturn_complex_three_step_switch",
+        "difficulty": "hard",
+        "what_it_tests": "Chuyển đổi 3 bước (Wiki -> Twitter -> Web News): Lượt cuối dứt khoát bỏ Twitter, chỉ gọi lookup cho Turing Award trong năm nay (timeframe='year')."
+      }
+    },
+    {
+      "id": "G10_multiturn_timeframe_carryover",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tin tức AI trong tuần này có gì mới?"
+        },
+        {
+          "role": "user",
+          "content": "Thế còn tin tức về chất bán dẫn (semiconductors) thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tìm chất bán dẫn thôi, vẫn giữ khung thời gian trong tuần này nhé"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "semiconductors",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_timeframe_topic_carryover",
+        "difficulty": "medium",
+        "what_it_tests": "Đổi chủ đề sang chất bán dẫn (semiconductors), carryover timeframe='week' và topic='news'."
       }
     }
   ]
