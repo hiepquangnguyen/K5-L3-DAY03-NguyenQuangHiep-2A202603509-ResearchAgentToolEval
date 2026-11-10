@@ -19,6 +19,7 @@ from .send.tool import send_telegram
 from .lookup.tool import web_search
 from .wikipedia.tool import search_wikipedia
 from .calculator.tool import calculate
+from .duckduckgo_search.tool import duckduckgo_search
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -41,6 +42,7 @@ TOOL_FUNCTIONS = {
     # then declare it in artifacts/tools.yaml and run `pytest tests/test_tool_contract.py`.
     "wikipedia": search_wikipedia,
     "calculator": calculate,
+    "duckduckgo_search": duckduckgo_search,
 }
 
 

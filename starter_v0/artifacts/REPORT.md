@@ -33,6 +33,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
 | clarify | hỏi lại người dùng khi thiếu thông tin | không |
+| duckduckgo_search | Search web/news through DuckDuckGo as a Tavily fallback; no API key required | yes |
 |  |  |  |
 |  |  |  |
 
@@ -85,6 +86,12 @@ Use `transcripts/*.transcript.json`.
 |  |  |  |  |  |
 
 ## B5. Bonus Evidence
+
+DuckDuckGo: added the tool, schema, routing rule, offline tests and 3 eval cases
+in `data/eval_group.json`. Full suite: **114 passed, 0 failed, 0 skipped**.
+Routing hypothesis: use DuckDuckGo only when explicitly requested or Tavily fails
+to avoid calling both search tools for the same query. Tests are in `tests/test_tools_todo.py`.
+Live DuckDuckGo requests and model benchmarks have not been run for this change.
 
 Only fill if your team did bonus.
 

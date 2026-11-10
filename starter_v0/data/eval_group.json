@@ -288,6 +288,61 @@
         "difficulty": "medium",
         "what_it_tests": "Đổi chủ đề sang chất bán dẫn (semiconductors), carryover timeframe='week' và topic='news'."
       }
+    },
+    {
+      "id": "TV4_duckduckgo_news",
+      "phase": "B",
+      "query": "Use DuckDuckGo to find 3 news items about AI this week. Use exactly AI as the query.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "duckduckgo_search",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Explicit DuckDuckGo source, news topic, week filter and result count."
+      }
+    },
+    {
+      "id": "TV4_out_of_scope_python",
+      "phase": "B",
+      "query": "Write Python code implementing quicksort for me.",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Coding requests must not trigger research tools; manually review the refusal text."
+      }
+    },
+    {
+      "id": "TV4_out_of_scope_math_switch",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "I want to find AI news on DuckDuckGo."
+        },
+        {
+          "role": "user",
+          "content": "Cancel the news search. Just compute the integral of x squared for me."
+        }
+      ],
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "The latest out-of-scope math request cancels earlier search intent; manually review the refusal."
+      }
     }
   ]
 }
