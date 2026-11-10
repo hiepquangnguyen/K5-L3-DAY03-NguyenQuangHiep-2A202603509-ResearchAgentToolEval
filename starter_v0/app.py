@@ -139,7 +139,8 @@ TOOL_ICONS = {
     "policy": "📑 Company Policy",
     "papers": "📚 arXiv Papers",
     "paper_text": "📄 arXiv Paper Text",
-    "format": "📝 Format Digest"
+    "format": "📝 Format Digest",
+    "calculator": "🧮 Calculator"
 }
 
 # Hiển thị lịch sử chat

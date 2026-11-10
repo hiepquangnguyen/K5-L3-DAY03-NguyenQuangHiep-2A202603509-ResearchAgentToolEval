@@ -1,0 +1,34 @@
+{
+  "dataset_id": "day04_v2_tv3_calculator",
+  "dataset_role": "group",
+  "description": "TV3 calculator routing cases. Merge selected cases into the official group suite only after team approval.",
+  "cases": [
+    {
+      "id": "T3_01_calculator_arithmetic",
+      "phase": "B",
+      "suite": "group",
+      "query": "Dùng calculator để tính chính xác (125 + 75) * 4.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "calculator", "args": {"expression": "(125 + 75) * 4"}}]},
+      "metadata": {"skill": "calculator_routing", "difficulty": "easy", "what_it_tests": "Numeric arithmetic routes to calculator instead of web search."}
+    },
+    {
+      "id": "T3_02_calculator_percentage",
+      "phase": "B",
+      "suite": "group",
+      "query": "Hãy dùng calculator với biểu thức 1200 * 15 / 100 để tính 15% của 1200.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "calculator", "args": {"expression": "1200 * 15 / 100"}}]},
+      "metadata": {"skill": "calculator_percentage", "difficulty": "easy", "what_it_tests": "The model passes a canonical numeric percentage expression."}
+    },
+    {
+      "id": "T3_03_calculus_boundary",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tính nguyên hàm của x^2.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "calculator_boundary", "difficulty": "medium", "what_it_tests": "Calculator handles arithmetic only; calculus remains out of scope."}
+    }
+  ]
+}

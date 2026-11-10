@@ -18,6 +18,7 @@ from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
 from .wikipedia.tool import search_wikipedia
+from .calculator.tool import calculate
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -39,6 +40,7 @@ TOOL_FUNCTIONS = {
     # TODO(student): register your new tool here, e.g. "my_tool": my_tool_function,
     # then declare it in artifacts/tools.yaml and run `pytest tests/test_tool_contract.py`.
     "wikipedia": search_wikipedia,
+    "calculator": calculate,
 }
 
 

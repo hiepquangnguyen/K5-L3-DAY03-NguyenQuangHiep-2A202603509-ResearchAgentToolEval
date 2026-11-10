@@ -117,3 +117,11 @@ tools:
       properties:
         query: {type: string, default: "", description: "Tên khái niệm, nhân vật hoặc chủ đề cần tra cứu"}
       required: [query]
+
+  - name: calculator
+    description: "Safely calculate a numeric arithmetic expression locally. Use for totals, percentages, addition, subtraction, multiplication, division, remainders, and numeric powers. Do not use for web lookup, unit/currency conversion, symbolic algebra, proofs, calculus, or code."
+    parameters:
+      type: object
+      properties:
+        expression: {type: string, minLength: 1, maxLength: 200, default: "", description: "Numeric expression containing numbers, parentheses, and arithmetic operators; example: (1200 * 15) / 100"}
+      required: [expression]
