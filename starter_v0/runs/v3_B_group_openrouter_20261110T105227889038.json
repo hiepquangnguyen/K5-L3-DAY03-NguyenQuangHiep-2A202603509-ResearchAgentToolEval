@@ -1,0 +1,222 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T105227889038",
+  "version": "v3",
+  "artifact_version": "v3+pc622fb6331a1+t8f291757f40b",
+  "prompt_hash": "c622fb6331a1bdbc5d6a9fdf6fe479061142970f9691953fae22c452122bd789",
+  "tools_hash": "8f291757f40bb6021fcbd16577302fe8caecbc690abb45be573098d10d46d7fc",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\hiepq\\VinUni\\Day03-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\hiepq\\VinUni\\Day03-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T10:52:27",
+  "summary": {
+    "total_cases": 3,
+    "measured_cases": 3,
+    "provider_error_cases": 0,
+    "passed_cases": 1,
+    "case_accuracy": 0.3333,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 0.3333,
+    "multiturn_accuracy": 0.0,
+    "failure_counts": {
+      "wrong_tool": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 2
+    }
+  },
+  "results": [
+    {
+      "id": "G01_wikipedia_person",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_wikipedia_person",
+        "difficulty": "easy",
+        "what_it_tests": "Tra cứu tiểu sử nhân vật lịch sử trên bách khoa toàn thư -> route vào wikipedia."
+      },
+      "input": "Alan Turing là ai theo bách khoa toàn thư Wikipedia?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Alan Turing"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Alan Turing"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Alan Turing"
+          },
+          "result": {
+            "tool": "search_wikipedia",
+            "query": "Alan Turing",
+            "title": "Alan Turing",
+            "summary": "Alan Mathison Turing was an English mathematician and logician widely regarded as the father of theoretical computer science. He formalised the concepts of algorithm and computation with the Turing machine, a model of a general-purpose computer, and his contributions to cryptanalysis helped the Allies of World War II decipher messages encrypted by the German Enigma machine. He also contributed the Turing test to philosophy of artificial intelligence and the Turing pattern concept to mathematical and theoretical biology.",
+            "url": "https://en.wikipedia.org/wiki/Alan_Turing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_wikipedia_concept",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_wikipedia_concept",
+        "difficulty": "medium",
+        "what_it_tests": "Tra cứu khái niệm khoa học nền tảng -> route vào wikipedia, không nhầm sang web news."
+      },
+      "input": "Định nghĩa Mạng nơ-ron nhân tạo (Artificial Neural Network) trên Wikipedia",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Artificial Neural Network"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Mạng nơ-ron nhân tạo"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'Artificial Neural Network', got 'Mạng nơ-ron nhân tạo'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Mạng nơ-ron nhân tạo"
+          },
+          "result": {
+            "tool": "search_wikipedia",
+            "query": "Mạng nơ-ron nhân tạo",
+            "title": "",
+            "summary": "Không tìm thấy bài viết Wikipedia nào khớp với từ khóa 'Mạng nơ-ron nhân tạo'.",
+            "url": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_wikipedia_multiturn",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_wikipedia_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "Multi-turn: ban đầu chưa nói tra cứu gì, sau đó bổ sung chủ đề Pythagoras -> gọi wikipedia."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra cứu giúp mình thông tin trên Wikipedia"
+        },
+        {
+          "role": "user",
+          "content": "Về định lý Pythagoras nhé"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, tra cứu định lý Pythagoras trên Wikipedia giúp mình"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Pythagoras"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Định lý Pythagoras"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "missing_info",
+        "failures": [
+          "query: expected 'Pythagoras', got 'Định lý Pythagoras'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Định lý Pythagoras"
+          },
+          "result": {
+            "tool": "search_wikipedia",
+            "query": "Định lý Pythagoras",
+            "title": "",
+            "summary": "Không tìm thấy bài viết Wikipedia nào khớp với từ khóa 'Định lý Pythagoras'.",
+            "url": ""
+          }
+        }
+      ]
+    }
+  ]
+}
