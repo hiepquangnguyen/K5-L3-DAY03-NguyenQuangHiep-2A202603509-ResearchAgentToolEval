@@ -57,7 +57,7 @@ tools:
         items:
           type: array
           default: []
-          description: "Danh sách item"
+          description: "Danh sách các bài viết/tin tức cần định dạng (gồm title, url, source, summary, section)."
           items:
             type: object
             properties:
@@ -66,8 +66,8 @@ tools:
               source: {type: string}
               summary: {type: string}
               section: {type: string}
-        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
-        headline: {type: string, default: "", description: "Tiêu đề"}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn định dạng: 'brief' (ngắn gọn), 'sections' (theo chuyên mục), 'bullets' (danh sách đầu dòng), 'thread' (chuỗi bài viết), 'daily_ai_vn' (bản tin AI tiếng Việt hàng ngày)."}
+        headline: {type: string, default: "", description: "Tiêu đề của bản tin hoặc báo cáo."}
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
@@ -76,8 +76,8 @@ tools:
     parameters:
       type: object
       properties:
-        text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        text: {type: string, default: "", description: "Nội dung văn bản cần gửi đi."}
+        confirmed: {type: boolean, default: false, description: "Cờ xác nhận: CHỈ đặt true khi người dùng đã nói rõ đồng ý/xác nhận trong ngữ cảnh hội thoại. Mặc định là false."}
       required: [text]
 
   - name: policy
@@ -85,9 +85,9 @@ tools:
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
-        top_k: {type: integer, default: 3, description: "Số mục"}
+        query: {type: string, default: "", description: "Từ khóa hoặc câu hỏi về chính sách nội bộ."}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Lĩnh vực chính sách cần tra cứu."}
+        top_k: {type: integer, default: 3, description: "Số điều khoản quy định cần lấy ra (mặc định 3)."}
       required: [query]
 
   - name: papers
@@ -95,9 +95,9 @@ tools:
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        max_results: {type: integer, default: 5, description: "Số lượng"}
-        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm bài báo khoa học."}
+        max_results: {type: integer, default: 5, description: "Số lượng bài báo tối đa (mặc định 5)."}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Tiêu chí sắp xếp: 'relevance' (độ liên quan), 'lastUpdatedDate' (cập nhật mới nhất), 'submittedDate' (ngày gửi)."}
       required: [query]
 
   - name: paper_text
@@ -105,9 +105,9 @@ tools:
     parameters:
       type: object
       properties:
-        arxiv_url: {type: string, default: "", description: "ID hoặc địa chỉ"}
-        max_pages: {type: integer, default: 5, description: "Số trang"}
-        max_chars: {type: integer, default: 8000, description: "Số ký tự"}
+        arxiv_url: {type: string, default: "", description: "Đường dẫn hoặc định danh bài báo arXiv (ví dụ: '2310.06825' hoặc 'https://arxiv.org/abs/2310.06825')."}
+        max_pages: {type: integer, default: 5, description: "Số trang tối đa cần trích xuất (mặc định 5)."}
+        max_chars: {type: integer, default: 8000, description: "Số ký tự tối đa cần trích xuất (mặc định 8000)."}
       required: [arxiv_url]
 
   - name: duckduckgo_search
@@ -136,3 +136,11 @@ tools:
       properties:
         expression: {type: string, minLength: 1, maxLength: 200, default: "", description: "Numeric expression containing numbers, parentheses, and arithmetic operators; example: (1200 * 15) / 100"}
       required: [expression]
+
+  - name: weather
+    description: "Lấy thông tin thời tiết và nhiệt độ hiện tại của một thành phố hoặc địa điểm cụ thể trên toàn thế giới qua Open-Meteo API. DÙNG KHI người dùng hỏi thời tiết, nhiệt độ, mưa nắng, dự báo tại một nơi cụ thể. KHÔNG DÙNG cho tra cứu tin tức xã hội hay bài báo khoa học."
+    parameters:
+      type: object
+      properties:
+        city: {type: string, default: "", description: "Tên thành phố hoặc địa danh (vd: Hanoi, Ho Chi Minh, Da Nang, Tokyo, London, Paris, New York)."}
+      required: [city]
