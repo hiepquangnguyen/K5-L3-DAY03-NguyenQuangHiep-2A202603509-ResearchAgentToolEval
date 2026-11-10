@@ -4,7 +4,7 @@
 - **Thành viên:**
   - Nguyễn Quang Hiệp (2A202603509 - Lead: Benchmark, Routing, UI Console, Wikipedia Tool)
   - Đoàn Văn Hiệp (Weather Tool, Unit Tests, Eval Cases)
-  - Quang Nam (Calculator Tool, Unit Tests, Eval Cases)
+  - Trần Quang Nam - 2A202603516 (Calculator Tool, Unit Tests, Eval Cases)
   - Nguyễn Bá Quảng (DuckDuckGo Search Fallback Tool, Unit Tests, Eval Cases)
 - **Model Provider:** OpenRouter (`openai/gpt-4o-mini`)
 
@@ -82,7 +82,7 @@ Toàn bộ dữ liệu dưới đây được trích xuất trực tiếp từ t
 | `v1` | `system_prompt.md` | Xóa bỏ chỉ dẫn đoán mò; quy định rõ ràng hành vi gọi `clarify` khi thiếu tham số và cơ chế bảo vệ xác nhận Telegram. | 0.80 | 1.00 | `runs/v1_B_base_openrouter_20261110T162545955287.json` |
 | `v2` | `system_prompt.md` + `tools.yaml` | Tích hợp công cụ `wikipedia` mới và bổ sung quy tắc định tuyến bách khoa toàn thư mà không làm giảm độ chính xác trên bộ Base Eval. | 1.00 | 1.00 | `runs/v2_B_base_openrouter_20261110T163814224705.json` |
 | `v2-group` | `eval_group.json` | Đánh giá áp lực (Stress Test) trên bộ 10 test case bẫy nâng cao do nhóm thiết kế độc lập. Bộc lộ 4 điểm yếu thực tế. | 1.00 | 0.60 | `runs/v2_B_group_openrouter_20261110T164621480591.json` |
-| `v3-group` | `system_prompt.md` | Bổ sung quy tắc ánh xạ khung thời gian năm, xử lý dừng tool dứt khoát khi người dùng hủy gửi tin, và chuẩn hóa trích xuất từ khóa. | 0.60 | 1.00 | `runs/v3_B_group_openrouter_20261110T165057752897.json` |
+| `v3-group` | `system_prompt.md` | Bổ sung quy tắc ánh xạ khung thời gian năm, xử lý dừng tool dứt khoát khi người dùng hủy gửi tin, chuẩn hóa trích xuất từ khóa và xác nhận lại bộ 13 case. | 0.60 | 1.00 | `runs/v3_B_group_openrouter_20261110T224212773261.json` |
 | `v3` | `system_prompt.md` | Chạy kiểm tra lại toàn bộ bộ Base Eval 20 câu để đảm bảo các thay đổi ở v3 không gây hồi quy (regression) trên các tác vụ cũ. | 1.00 | 1.00 | `runs/v3_B_base_openrouter_20261110T165414906131.json` |
 
 ---
@@ -104,9 +104,9 @@ Các lỗi dưới đây là những lỗi thực tế phát sinh trong quá tr�
 
 ---
 
-## B3. Danh mục 10 Test Cases Nâng cao Bộ Group Eval
+## B3. Danh mục 13 Test Cases Nâng cao Bộ Group Eval
 
-Bộ dữ liệu được lưu cố định tại `starter_v0/data/eval_group.json`, gồm 5 ca đơn lượt và 5 ca đa lượt nhằm kiểm tra các tình huống biên phức tạp:
+Bộ dữ liệu hiện tại được lưu tại `starter_v0/data/eval_group.json`, gồm 7 ca đơn lượt và 6 ca đa lượt nhằm kiểm tra các tình huống biên phức tạp. Run v3-group đạt 13/13 PASS:
 
 | Mã Case | Mục đích kiểm thử kỹ thuật | Hành vi / Tool kỳ vọng | Kết quả v3 |
 |---|---|---|:---:|
@@ -120,6 +120,9 @@ Bộ dữ liệu được lưu cố định tại `starter_v0/data/eval_group.js
 | `G08_multiturn_send_reject` | Người dùng phản hồi: "Không, hủy lệnh gửi tin đi nhé". | `no_tool` (Dừng lại, thông báo đã hủy thao tác). | **PASS** |
 | `G09_multiturn_3step_switch` | Chuyển đổi ngữ cảnh 3 bước (Wiki -> Twitter -> Bỏ Twitter tìm web tin giải Turing). | Gọi `lookup(query='Turing Award', topic='news', timeframe='year')`. | **PASS** |
 | `G10_multiturn_time_carry` | Đổi chủ đề sang chất bán dẫn (semiconductors), giữ nguyên khung thời gian tuần. | Gọi `lookup(query='semiconductors', topic='news', timeframe='week')`. | **PASS** |
+| `TV4_duckduckgo_news` | Kiểm tra tool DuckDuckGo với nguồn explicit, topic news, timeframe week và số lượng 3. | Gọi `duckduckgo_search(query='AI', topic='news', timeframe='week', max_results=3)`. | **PASS** |
+| `TV4_out_of_scope_python` | Yêu cầu viết code Python ngoài phạm vi research. | Từ chối bằng văn bản, `no_tool`. | **PASS** |
+| `TV4_out_of_scope_math_switch` | Yêu cầu tích phân mới nhất hủy ý định tìm DuckDuckGo trước đó. | Từ chối bằng văn bản, `no_tool`. | **PASS** |
 
 ---
 
@@ -144,10 +147,10 @@ Trích xuất trực tiếp từ tệp nhật ký tương tác: `starter_v0/tran
 | **Bộ Đánh giá Nghiên cứu Mở rộng (arXiv & Company Policy)** | `starter_v0/runs/v2_B_extension_openrouter_20261110T211430020841.json` | Đạt 9/10 (90.0%) trên bộ `eval_research_extension.json`: định tuyến chuẩn xác tìm kiếm bài báo khoa học trên arXiv (`papers`), đọc trích xuất văn bản từ mã số paper `1706.03762` (`paper_text`), và tra cứu đúng quy chế công ty (`policy`). | Đảm bảo tính tuân thủ pháp lý và bảo mật dữ liệu nội bộ khi triển khai Agent vào môi trường doanh nghiệp. |
 | **Cơ chế Bảo vệ Xác nhận Telegram** | `system_prompt.md`, `eval_group.json` (G02, G08) | Ép buộc mọi thao tác gửi tin nhắn phải có xác nhận tường minh `confirmed=True`; dừng tiến trình an toàn khi người dùng từ chối. | Tránh rủi ro phát tán thông tin giả mạo hoặc dữ liệu chưa được người dùng rà soát. |
 | **Giao diện Web UI Trực quan (Streamlit Console)** | `starter_v0/app.py` | Cung cấp giao diện Developer Console có dropdown chuyển đổi giữa các phiên bản, bảng chỉ số đánh giá 4 góc độ, khối hiển thị Execution Trace Debugger và các nút query mẫu. | Trạng thái phiên làm việc độc lập, hỗ trợ xóa lịch sử chat để bắt đầu lại ngữ cảnh mới. |
-| **Kiểm thử Đơn vị Toàn diện (Pytest)** | `starter_v0/tests/` (**157 passed**) | 157 bài kiểm thử offline bao phủ schema hợp đồng của 14 công cụ, mô phỏng phản hồi mạng và xử lý ngoại lệ an toàn (0 failed, 0 skipped). | Đảm bảo tính ổn định tuyệt đối của toàn bộ hệ thống khi vận hành trong thực tế. |
+| **Kiểm thử Đơn vị Toàn diện (Pytest)** | `starter_v0/tests/` (**159 passed**) | 159 bài kiểm thử offline bao phủ schema hợp đồng của 14 công cụ, các suite Calculator/Weather bổ sung, mô phỏng phản hồi mạng và xử lý ngoại lệ an toàn (0 failed, 0 skipped). | Đảm bảo tính ổn định tuyệt đối của toàn bộ hệ thống khi vận hành trong thực tế. |
 
 **Chi tiết Kiểm thử Unit Test:**
-- Kết quả kiểm thử: **157/157 tests passed** (thời gian chạy: 1.02 giây, 0 failed, 0 skipped).
+- Kết quả kiểm thử: **159/159 tests passed** (0 failed, 0 skipped).
 - **Trường hợp lỗi unit test phát hiện được mà eval thông thường bỏ sót:**  
   Trong quá trình phát triển tool `wikipedia`, khi người dùng nhập chuỗi truy vấn rỗng, khoảng trắng, hoặc ký tự đặc biệt, API của Wikipedia sẽ trả về mã lỗi HTTP `404 Not Found`. Nếu hàm không bắt ngoại lệ này, chương trình sẽ gặp lỗi sập (crash) ngay lập tức. Unit test đã bắt buộc hàm phải xử lý `try/except` an toàn và trả về cấu trúc lỗi chuẩn `{"tool": "wikipedia", "error": "not_found"}`. Tương tự, với `calculator`, unit test đã kiểm thử việc chặn đứng các biểu thức chia cho 0 (`ZeroDivisionError`) và các chuỗi chèn mã độc hại để đảm bảo an toàn tuyệt đối. Với tool `weather` (Đoàn Văn Hiệp phát triển), unit test độc lập tại `tests/test_member2.py` đã phát hiện và xử lý ngoại lệ khi nhập tên thành phố rỗng (`city=""`) hoặc khi dịch vụ Open-Meteo timeout, hàm tự động bắt lỗi trả về dictionary `{"tool": "weather", "error": ...}` chuẩn MCP thay vì gây crash; đồng thời kiểm thử điều kiện guardrail nghiêm ngặt của tool `send`: khi `confirmed=False` thì tuyệt đối không có bất kỳ request HTTP nào được gửi ra ngoài. Trong khi đó, bộ chấm eval thông thường chỉ kiểm tra cấu trúc JSON sinh ra từ LLM chứ không kích hoạt API thực tế để phát hiện các lỗi runtime này.
 

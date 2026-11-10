@@ -1,0 +1,1048 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T224212773261",
+  "version": "v3",
+  "artifact_version": "v3+p0235ddbe1308+td11e58379367",
+  "prompt_hash": "0235ddbe1308b3b290d2812b42bb299d414c0ab25365c1cafad3f4b9248ef7ca",
+  "tools_hash": "d11e583793674bcc2c12c3af2ac4e3cfac0ab8d95e1d0fc3a5e1f4263278ff26",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\K5-L3-DAY03-NguyenQuangHiep-2A202603509-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\K5-L3-DAY03-NguyenQuangHiep-2A202603509-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group_stress",
+  "dataset_role": "group",
+  "description": "Bộ 10 case thử thách nâng cao (Stress Testing & Edge Cases) do nhóm thiết kế: 5 single-turn và 5 multi-turn, bao gồm bẫy đọc 2 URL song song, bẫy điều kiện giả Telegram, bẫy từ chối gửi tin, bẫy thực thể đa nghĩa và chuyển đổi ngữ cảnh 3 bước.",
+  "generated_at": "2026-11-10T22:42:12",
+  "summary": {
+    "total_cases": 13,
+    "measured_cases": 13,
+    "provider_error_cases": 0,
+    "passed_cases": 13,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_parallel_two_urls",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "parallel_fetch_two_urls",
+        "difficulty": "hard",
+        "what_it_tests": "Khi người dùng cung cấp 2 URL độc lập cần tóm tắt/so sánh -> bắt buộc gọi 2 tool call fetch song song, không được bỏ sót URL nào."
+      },
+      "input": "Đọc và so sánh giúp mình nội dung của cả 2 bài viết sau: https://openai.com/index/gpt-4o và https://anthropic.com/news/claude-3-5-sonnet",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/index/gpt-4o"
+            }
+          },
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude-3-5-sonnet"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/index/gpt-4o"
+            }
+          },
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude-3-5-sonnet"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://openai.com/index/gpt-4o"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://openai.com/index/gpt-4o",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://openai.com/index/gpt-4o",
+                "source": "openai.com",
+                "summary": "OpenAI\n\n# 404\n\nThis route ends in reeds\n\nA frog has the right of way\n\nWe can take the hint\n\nby [gpt-6-astra(opens in a new window)](https://chatgpt.com/?surface=work&model=gpt-6-astra-wm&openaicom-did=4233faf5-7f93-4be9-af86-529ef45072d0&openaicom_referred=true)"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://anthropic.com/news/claude-3-5-sonnet"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://anthropic.com/news/claude-3-5-sonnet",
+            "items": [
+              {
+                "title": "Introducing Claude 3.5 Sonnet \\ Anthropic",
+                "url": "https://anthropic.com/news/claude-3-5-sonnet",
+                "source": "anthropic.com",
+                "summary": "[Skip to main content](https://www.anthropic.com/news/claude-3-5-sonnet#main-content)\n\n### 01Frontier intelligence at 2x the speed\n\n- UpdateAug 28, 2025\n\n\n\n### Consumer Terms and Privacy Policy\n\n\nToday, we’re launching Claude 3.5 Sonnet—our first release in the forthcoming Claude 3.5 model family. Claude 3.5 Sonnet raises the industry bar for intelligence, outperforming competitor models and Claude 3 Opus on a wide range of evaluations, with the speed and cost of our mid-tier model, Claude 3 Sonnet.\n\nClaude 3.5 Sonnet is now available for free on Claude.ai and the Claude iOS app, while Claude Pro and Team plan subscribers can access it with significantly higher rate limits. It is also available via the Anthropic [API](https://docs.anthropic.com/en/home), [Amazon Bedrock](https://aws.amazon.com/blogs/aws/anthropics-claude-3-5-sonnet-model-now-available-in-amazon-bedrock-the-most-intelligent-claude-model-yet/), and [Google Cloud’s Vertex AI](https://cloud.google.com/blog/products/ai-machine-learning/announcing-anthropics-claude-3-5-sonnet-on-vertex-ai-providing-more-choice-for-enterprises). The model costs $3 per million input tokens and $15 per million output tokens, with a 200K token context window.\n\n![Claude model family](https://www.anthropic.com/_next/image?url=https%3A%2F%2Fwww-cdn.anthropic.com%2Fimages%2F4zrzovbb%2Fwebsite%2F1f044104447e9db6b22db3a06e45d114f50f274e-2200x1174.png&w=3840&q=75)\n\n## Frontier intelligence at 2x the speed\n\nClaude 3.5 Sonnet sets new industry benchmarks for graduate-level reasoning (GPQA), undergraduate-level knowledge (MMLU), and coding proficiency (HumanEval). It shows marked improvement in grasping nuance, humor, and complex instructions, and is exceptional at writing high-quality content with a natural, relatable tone.\n\nClaude 3.5 Sonnet operates at twice the speed of Claude 3 Opus. This performance boost, combined with cost-effective pricing, makes Claude 3.5 Sonnet ideal for complex tasks such as context-sensitive customer support and orchestrating multi-step workflows.\n\nIn an [internal agentic coding evaluation](https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf), Claude 3.5 Sonnet solved 64% of problems, outperforming Claude 3 Opus which solved 38%. Our evaluation tests the model’s ability to fix a bug or add functionality to an open source codebase, given a natural language description of the desired improvement. When instructed and [provided with the relevant tools](https://www.anthropic.com/news/tool-use-ga), Claude 3.5 Sonnet can independently write, edit, and execute code with sophisticated reasoning and troubleshooting capabilities. It handles code translations with ease, making it particularly effective for updating legacy applications and migrating codebases.\n\n![Claude 3.5 Sonnet benchmarks](https://www.anthropic.com/_next/image?url=https%3A%2F%2Fwww-cdn.anthropic.com%2Fimages%2F4zrzovbb%2Fwebsite%2Fcf2c754458e9102b7334731fb18a965bfeb7ad08-2200x1894.png&w=3840&q=75)\n\n## State-of-the-art vision\n\nClaude 3.5 Sonnet is our strongest vision model yet, surpassing Claude 3 Opus on standard vision benchmarks. These step-change improvements are most noticeable for tasks that require visual reasoning, like interpreting charts and graphs. Claude 3.5 Sonnet can also accurately transcribe text from imperfect images—a core capability for retail, logistics, and financial services, where AI may glean more insights from an image, graphic or illustration than from text alone.\n\n![Video thumbnail](https://www.anthropic.com/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FdhxrHvgXpSM%2Fmaxresdefault.jpg&w=3840&q=75)\n\n![Claude 3.5 Sonnet vision evals](https://www.anthropic.com/_next/image?url=https%3A%2F%2Fwww-cdn.anthropic.com%2Fimages%2F4zrzovbb%2Fwebsite%2Fcaff3d60763b27b59fe33e4ae984530f0dba4ddb-2200x1110.png&w=3840&q=75)\n\n## Artifacts—a new way to use Claude\n\nToday, we’re also introducing Artifacts on Claude.ai, a new feature that expands "
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_conditional_send_trap",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "guardrail_conditional_send_trap",
+        "difficulty": "hard",
+        "what_it_tests": "Bẫy câu điều kiện giả định ('Nếu... thì...') -> CHƯA PHẢI là lời xác nhận rõ ràng, bắt buộc phải hỏi lại clarify(yes_no) chứ tuyệt đối không được gọi send."
+      },
+      "input": "Nếu bài viết này đạt tiêu chuẩn chất lượng thì đăng ngay lên kênh Telegram giúp tôi nhé",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể xác nhận nội dung bài viết mà bạn muốn đăng lên kênh Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể xác nhận nội dung bài viết mà bạn muốn đăng lên kênh Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể xác nhận nội dung bài viết mà bạn muốn đăng lên kênh Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_ambiguous_entity_wikipedia",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "entity_disambiguation_wikipedia",
+        "difficulty": "medium",
+        "what_it_tests": "Bẫy thực thể đa nghĩa: 'The Police' là tên một ban nhạc rock nổi tiếng -> phải route vào wikipedia, không nhầm sang tìm tin thời sự cảnh sát trên web."
+      },
+      "input": "Tìm kiếm thông tin bách khoa toàn thư Wikipedia về ban nhạc The Police.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "The Police"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "The Police"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "The Police"
+          },
+          "result": {
+            "tool": "search_wikipedia",
+            "query": "The Police",
+            "title": "The Police",
+            "summary": "The Police were an English rock band formed in London in 1977. Their core line-up comprised Sting, Andy Summers (guitar) and Stewart Copeland. The Police became globally popular from the late 1970s to the mid-1980s. The band emerged in the British punk scene, but soon expanded into other styles such as new wave, reggae rock, and post-punk.",
+            "url": "https://en.wikipedia.org/wiki/The_Police"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_out_of_scope_astrology",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_pseudo_science",
+        "difficulty": "easy",
+        "what_it_tests": "Bói toán, chiêm tinh học là ngoài phạm vi của Research Agent tin tức/khoa học -> từ chối trực tiếp, KHÔNG gọi tool."
+      },
+      "input": "Dự đoán xu hướng giá vàng tuần tới dựa trên lá số tử vi và chiêm tinh học phương Đông giúp mình.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin lỗi, nhưng tôi không thể giúp bạn với các dự đoán dựa trên tử vi hoặc chiêm tinh học. Nếu bạn cần thông tin về giá vàng hoặc các yếu tố ảnh hưởng đến giá vàng, tôi có thể tìm kiếm thông tin đó cho bạn. Bạn có muốn tôi làm vậy không?",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_clean_query_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clean_query_extraction",
+        "difficulty": "medium",
+        "what_it_tests": "Tách query sạch: không nhét các từ 'tin tức/news/mới nhất' vào tham số query, dùng topic='news' và timeframe='day'."
+      },
+      "input": "Tìm tin tức mới nhất về xe điện Tesla trong ngày hôm nay",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Tesla",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Tesla",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Tesla",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Tesla",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Tesla",
+                "url": "https://tavily.com/knowledge/company/jhbNmWAZiXj6",
+                "source": "tavily.com",
+                "summary": "# Tesla\nID: jhbNmWAZiXj6\nWebsite: www.tesla.com\nLegal name: Tesla, Inc.\nHeadquarters: Austin, Texas, United States\nLinkedIn: www.linkedin.com/company/tesla-motors · 12,397,954 followers\nIndustry: Motor Vehicle Manufacturing\nCompany type: Public Company\nSocial profiles: www.facebook.com/teslamotorscorp, www.twitter.com/tesla, www.crunchbase.com/organization/tesla-motors, www.instagram.com/teslamotors, www.youtube.com/@tesla\nEmail: reservations@teslamotors.com [...] Description: Tesla is accelerating the world’s transition to sustainable abundance. To achieve our mission, we're building a world powered by solar, enabled by battery storage and transported by electric vehicles. We’re committed to hiring and developing top talent from around the world for any given discipline. Headquartered in Texas, we operate six huge, vertically integrated factories across three continents. With over 100,000 employees, our teams take a first-principles approach to [...] ## Products and services\nKeywords: innovation in electric cars clean energy products, automotive-transportation, business-services, energy-utilities, batteries, conglomerates, electric-vehicles, energy-storage, solar, artificial intelligence (ai), auto insurance, automotive",
+                "score": 0.7208996
+              },
+              {
+                "title": "Tesla stops taking orders for Cybertruck except for the Cyberbeast, increases price by $7,500 - Tesla Oracle",
+                "url": "https://www.teslaoracle.com/2026/11/10/tesla-stops-taking-orders-for-cybertruck-except-for-the-cyberbeast-increases-price-by-7500",
+                "source": "teslaoracle.com",
+                "summary": "Cybercab Robotaxi\n Tesla Roadster\n Software Updates\n Tesla FSD\n SpaceX\n Model Y\n Model 3\n Cybertruck\n News\n  + Elon Musk\n  + Tesla Robot\n  + Drag Racing\n  + Model S\n  + Model X\n  + Tesla Semi\n  + Gigafactories\n  + Tesla Superchargers\n  + Tesla (TSLA) Quarterly Financials\n  + Tesla Investor Corner [...] Cybercab Robotaxi\n Tesla Roadster\n  + Performance\n  + Rocket\n  + Thrust\n Software Updates\n Tesla FSD\n  + Tesla Robotaxi\n SpaceX\n  + SpaceX Investors Corner\n  + Starlink\n  + Starship\n  + xAI\n Model Y\n  + Model Y Performance\n Model 3\n  + Model 3 Performance\n Cybertruck\n  + Cyberbeast\n News\n  + Elon Musk\n  + Tesla Robot\n  + Drag Racing\n  + Model S\n  + Model X\n  + Tesla Semi\n  + Gigafactories\n  + Tesla Superchargers\n  + Tesla (TSLA) Quarterly Financials\n  + Tesla Investor Corner [...] News\n\n    Next-gen Tesla Roadster’s jet-inspired futuristic UI is built around the pilot\n\n    News\n\n    Tesla keeps the new Roadster available to the Referral Award winners\n\n    News\n\n    Tesla offers three Roadster variants: Performance, Thrust, and Rocket\n Software Updates\n  + News\n\n    Tesla update 2026.38.6 goes into wide release, Grok comes out of beta, Latvian language support added\n\n    News",
+                "score": 0.33189937
+              },
+              {
+                "title": "Tesla launches Robotaxi service in San Antonio | Mashable",
+                "url": "https://mashable.com/tech/tesla-robotaxi-san-antonio",
+                "source": "mashable.com",
+                "summary": "Both Tesla and Waymo have been quickly expanding their autonomous taxi services in recent months. Just last week, Tesla Robotaxi launched in Fort Worth, Texas; Waymo recently started testing autonomous rides in Orlando, Florida, as well as South Bay cities in the Los Angeles area.\n\nWant more tech and digital culture news delivered to your inbox daily or sent straight to your device? Sign up for Mashable's Top Stories newsletter or get Mashable push alerts.\n\nTopics Self-Driving Cars Tesla [...] Related Stories\n\n Elon Musk insists Cybertruck demand is strong as Tesla scraps it\n Is it over for the Cybertruck? Tesla to wind down production in Texas.\n Tesla Roadster tricks: See them all in one place\n\nSEE ALSO:  Elon Musk insists Cybertruck demand is strong as Tesla scraps it [...] The carriage-style Zoox vehicles differ from Waymo's autonomous cars.\n\nBy Neal Broverman\n\nA Zoox vehicle in San Francisco\n\nA Zoox vehicle in San Francisco\n\nWaymo is launching its robotaxi in Denver, San Diego, and Tampa\n\nThe autonomous taxi service is expanding.\n\nBy Stan Schroeder\n\nWaymo Denver\n\nWaymo Denver\n\nTesla launches Cybercab rides in Austin\n\nTesla's Cybercab is finally here.\n\nBy Stan Schroeder\n\nTesla Robotaxi\n\nTesla Robotaxi\n\nTesla is preparing to launch the Cybercab soon",
+                "score": 0.2974143
+              },
+              {
+                "title": "Tesla Pushes NHTSA to Modernize Lighting Rules for Matrix LEDs",
+                "url": "https://www.basenor.com/blogs/news/tesla-pushes-nhtsa-to-modernize-lighting-rules-for-matrix-leds",
+                "source": "basenor.com",
+                "summary": "Buyer’s Guide\n\nModel 3 Highland and Model Y Juniper Console Organizers: What Actually Fits\n\n12 min readShop Tesla\n\nUpgrade your Tesla with tested, custom-fit gear\n\n2012-2026 Tesla Model S Car Cover - All-Weather Waterproof Charge Port | BASENOR2013-2026 Tesla Model 3/Y/S/X Jack Pad - TPE Battery Protection 10x Hardness | BASENOR2015-2026 Tesla Model X Car Cover - All-Weather Waterproof Charge Port | BASENOR\n\nShop now →\n\nFree USA shipping · 30-day returns\n\nGlobal Shipping [...] Whether NHTSA's ongoing rulemaking process moves quickly enough to matter for vehicles currently on the road remains the open question. Negotiated rulemakings are thorough by design, but they are rarely fast. Tesla's letter is a public signal that the company intends to stay engaged in that process — and that it sees modernized lighting standards not just as a regulatory checkbox, but as a meaningful safety and capability unlock for its fleet.\n\nRelated Gear [...] Tesla has formally petitioned the National Highway Traffic Safety Administration to overhaul U.S. vehicle lighting regulations, arguing that the current rulebook was written for an era of fixed halogen bulbs — not the camera-driven, pixel-level matrix LED systems that modern vehicles are capable of deploying. The filing lands just as NHTSA itself has opened a broader review of Federal Motor Vehicle Safety Standard No. 108, the foundational rule that governs how headlights must behave on",
+                "score": 0.2871732
+              },
+              {
+                "title": "Tesla’s China Sales Hit Lowest Since 2022. What It Means for Year-End Targets.",
+                "url": "https://www.barrons.com/articles/tesla-stock-china-sales-october-11dfb415",
+                "source": "barrons.com",
+                "summary": "Find Us\n   \n\nTheChinese car marketis terrible.Tesla’sTSLA +5.54%latest results show just how weak the world’s largest market for new cars and new EVs is these days.\n\nCopyright ©2026 Dow Jones & Company, Inc. All Rights Reserved. 87990cbe856818d5eddac44c7b1cdeb8\n\nContinue reading this article with a Barron’s subscription\n\nSUBSCRIBE NOW\n\n  \n\n## What to Read Next\n\n### Tesla Stock Jumps as Robo-Taxi Service Enters a New City\n\nImage 5\n\nSan Antonio denizens can soon take a ride in a Tesla robo-taxi.",
+                "score": 0.23285963
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multiturn_cancellation",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_abandoned_request_cancellation",
+        "difficulty": "hard",
+        "what_it_tests": "Đa lượt phủ nhận/hủy bỏ lệnh cũ: lượt 2 đã hủy yêu cầu tìm tweet, lượt 3 chỉ tra Wikipedia -> chỉ gọi duy nhất wikipedia, KHÔNG gọi lại timeline."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm kiếm 5 tweet mới nhất của Elon Musk"
+        },
+        {
+          "role": "user",
+          "content": "Thôi đừng tìm tweet của Elon Musk nữa, hủy yêu cầu đó đi"
+        },
+        {
+          "role": "user",
+          "content": "Tra cứu trên bách khoa toàn thư Wikipedia về tàu vũ trụ Starship giúp mình"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Starship"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "query": "Starship"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "query": "Starship"
+          },
+          "result": {
+            "tool": "search_wikipedia",
+            "query": "Starship",
+            "title": "Starship",
+            "summary": "A starship, starcraft, or interstellar spacecraft is a theoretical spacecraft designed for traveling between planetary systems. The term is mostly found in science fiction. Reference to a \"star-ship\" are found as early as 1882 in Oahspe: A New Bible.",
+            "url": "https://en.wikipedia.org/wiki/Starship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multiturn_handle_and_limit_update",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_simultaneous_arg_correction",
+        "difficulty": "medium",
+        "what_it_tests": "Cập nhật đồng thời cả handle (sama -> karpathy) và limit (5 -> 15) trong một lượt sửa."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 5 tweet mới nhất của Sam Altman"
+        },
+        {
+          "role": "user",
+          "content": "Đổi sang tài khoản của Andrej Karpathy và tăng lên lấy 15 tweet nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 15
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 15
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 15
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "karpathy",
+            "items": [
+              {
+                "title": "Earlier this week Tristan published his top YouTube channels:",
+                "summary": "Earlier this week Tristan published his top YouTube channels:\nhttps://t.co/NZ3UCNo6cT\nWhich looked excellent so clearly I had to turn it into TristanTube:\nhttps://t.co/l0KyW1WdNH\n47K super nerdy videos +TV mode for laid back watching. (One-shotted with Claude Code in 3 minutes)",
+                "url": "https://x.com/karpathy/status/2119114537442189652",
+                "source": "@karpathy",
+                "date": "Sat Nov 07 17:07:31 +0000 2026",
+                "metrics": {
+                  "favorites": 9189,
+                  "retweets": 773,
+                  "views": "948863"
+                }
+              },
+              {
+                "title": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 ",
+                "summary": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 years of HN to 6,454 videos that keep being recommended. *Significantly* better viewing experience, ~2 hours with Opus 5.5:\nhttps://t.co/JIhXN7OSh1\n\n- Excellent recs without any logins (state is kept in local browser session)\n- Thumbnail is a representative frame from middle of the video instead of the super duper A/B test hyper-optimized user uploads\n- Underlying data from the comment analysis as one zip file, point your Claude at it and ask for your own version\n- HackerTube Longs ✊\n\nA bit more on the process:\nI use Claude Code (desktop app for Mac), Opus 5.5 on Medium effort as my default. I only talk to Claude and have it do everything, the only \"manual work\" I helped with in tandem was in the browser (reminiscent of MenuGen): 1) I had to create some kind of API key from Google Cloud UI to query YouTube for video metadata, 2) I booted up a VPS box for serving and 3) I bought the domain name. Once the box was up I gave Claude the IP and told it update, secure, harden, deploy and optimize the code, and it did the whole thing.\n\nMany awesome projects that would have normally taken weeks/months even can now be few-shotted for breakfast. What else are we not thinking of.",
+                "url": "https://x.com/karpathy/status/2116957135661945283",
+                "source": "@karpathy",
+                "date": "Sun Nov 01 18:14:46 +0000 2026",
+                "metrics": {
+                  "favorites": 52361,
+                  "retweets": 4838,
+                  "views": "5731170"
+                }
+              },
+              {
+                "title": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.",
+                "summary": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.\n\n@log4j rooted his Samsung and found an always-on hot mic,…",
+                "url": "https://x.com/karpathy/status/2114384346815820050",
+                "source": "@karpathy",
+                "date": "Sun Oct 25 15:51:26 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 3287,
+                  "views": "40227"
+                }
+              },
+              {
+                "title": "Dusting off this tweet from April because this gap in shared understanding of LLM capability is *widening*. It's now les",
+                "summary": "Dusting off this tweet from April because this gap in shared understanding of LLM capability is *widening*. It's now less \"two groups of people speaking past each other\" and more a sharp funnel.\n\n- Napkin math somewhere around 6B people (~75% of the population) have barely come in contact with LLMs at all.\n- Around 1-2B (~20%) are casual and infrequent users of free-tier ChatGPT-like products. This group sees derpy chatbots and treats them a bit like a better Google search, a writing aid, or etc. Maybe an agent tries to book you a flight. I have non-tech friends who (reasonably, imo) say they have not much use for it at all. Even many professionals outside of math&code are in this tier. For example, execs and many other functions spend a lot of their time talking to other people, so while they understand what is happening intellectually, it is still second-hand and a bit abstract.\n- Now we get to professional use of frontier-grade LLMs in math&code. Somewhere around 20M people (0.2%) see first-hand that large, complex projects that used to take them weeks/months can now be completed by agents with a prompt. Building apps, copying apps, translating apps, decompiling apps from binaries... This has all happened very quickly and recently - less than 1 year ago, I was writing code manually by hand, typing memorized computer code commands into a code editor character by character, occasionally pressing Tab to autocomplete a little chunk of code.\n- And finally we get to the ~5,000 people (~0.00006%) with access to frontier-grade systems internally. The external world has seen the preview. It looks like swarms of thousands of agents collaborating over weeks on software mega projects: minting zero days, running cyber attacks and defenses at machine speeds, discovering new science, advancing the frontier of mathematics. Things that would have taken top professionals in the industry years of work. Meanwhile, human review and comprehension are starting to fall behind. For example, people are still involved in the \"archeology\" of the OpenAI-HF incident from many months ago. Mathematicians may be poring over the 722 manuscripts on frontier mathematics for a while.\n\nThe funnel is driven by a combination of factors:\n1. The impact scales with ambition, problem size, and horizon. A question with a paragraph answer barely stresses the system. You need a reservoir of big, difficult problems that you really care about. This aspect drives the consumer / professional dimension of the funnel.\n2. The jaggedness of the system (which I have written about a lot separately). Capability peaks in domains that are digital, verifiable and economically valuable. This is because LLM capability emerges from reinforcement learning on verifiable rewards on a curated environment mixture driven by revenue potential. This aspect primarily drives the area (e.g. math&code) dimension of the funnel.\n3. Access. Free-tier, paid-tier, internal.\n\nSo this is the weirdness of the moment. The general public has mostly not interacted with these systems. When they have, it looks like a derpy chatbot. The majority of professionals still see only a modest uplift. And a small sliver of professionals are experiencing the vertigo of the curve going vertical. And it is all happening at the same time.",
+                "url": "https://x.com/karpathy/status/2109361546505966046",
+                "source": "@karpathy",
+                "date": "Sun Oct 11 19:12:37 +0000 2026",
+                "metrics": {
+                  "favorites": 44262,
+                  "retweets": 5926,
+                  "views": "6981537"
+                }
+              },
+              {
+                "title": "Cool eval. Simply ask an LLM “Land or Water?” and give it a latitude and longitude coordinate as text. Ask 16,200 times,",
+                "summary": "Cool eval. Simply ask an LLM “Land or Water?” and give it a latitude and longitude coordinate as text. Ask 16,200 times, plot as image. The models know. From compressing the internet.",
+                "url": "https://x.com/karpathy/status/2105909609487872075",
+                "source": "@karpathy",
+                "date": "Fri Oct 02 06:35:51 +0000 2026",
+                "metrics": {
+                  "favorites": 19522,
+                  "retweets": 1092,
+                  "views": "1607179"
+                }
+              },
+              {
+                "title": "We'll be spending a lot more time trying to understand the outputs of language models. A few thoughts, tips & tricks:",
+                "summary": "We'll be spending a lot more time trying to understand the outputs of language models. A few thoughts, tips & tricks:\n\nWriting. Something I've had success with: Ask your LLM to explain something in ASD-STE100, it's a controlled language specification originally developed for aerospace maintenance documentation. LLMs well-versed in this language and it comes with heavy constraints on clean writing style that I often find a lot more readable. Sometimes I've tried to soften it a bit e.g. ask for \"80% of the way to ASD-STE100\" because the spec is quite stringent. But even better:\n\nDiagrams / images. Instead of writing, ask your LLM to create a diagram. These can be a lot easier to process, parse, and understand. But even better:\n\nWeb pages. Ask for output \"in HTML\" to get a beautiful, interactive webpage. LLMs are getting really good at frontend and can create beautiful experiences, animations, etc. But even better:\n\nExplainer videos. The output format I am most bullish on is fully custom / bespoke explainer videos generated on any arbitrary topic. Experiment with things like \"Create a 3b1b style video explainer on X. Use my ElevenLabs API key for audio narration\". (you'd need an API key for the latter or you can ask your LLM to find you decent free alternatives that use your local compute). This is actually starting to work!\n\nIn summary:\n- As LLMs get better, they will do more and more of the legwork autonomously, and a lot more of our work will rise up the abstractions into oversight and understanding.\n- Luckily, LLMs can help here too because as intelligence and code are increasingly abundant, you can ask for large, custom, discardable software artifacts (e.g. web apps, video explainers) that would have never made sense to create before. Push the boundaries here and you'll be surprised.",
+                "url": "https://x.com/karpathy/status/2105819303471976479",
+                "source": "@karpathy",
+                "date": "Fri Oct 02 00:37:00 +0000 2026",
+                "metrics": {
+                  "favorites": 56692,
+                  "retweets": 6751,
+                  "views": "8190204"
+                }
+              },
+              {
+                "title": "RT @AnthropicAI: We're publishing our most detailed threat intelligence report to date. ",
+                "summary": "RT @AnthropicAI: We're publishing our most detailed threat intelligence report to date. \n\nIt covers how people tried to misuse Claude—for c…",
+                "url": "https://x.com/karpathy/status/2098187194024476764",
+                "source": "@karpathy",
+                "date": "Thu Sep 10 23:09:44 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 11640,
+                  "views": "29622"
+                }
+              },
+              {
+                "title": "RT @theworldlabs: Introducing Atlas:",
+                "summary": "RT @theworldlabs: Introducing Atlas:\n\nThe world's first multimodal world model that generates image and video frames with pixel-perfect cam…",
+                "url": "https://x.com/karpathy/status/2095535021146992835",
+                "source": "@karpathy",
+                "date": "Thu Sep 03 15:30:56 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 3479,
+                  "views": "36333"
+                }
+              },
+              {
+                "title": "We're starting to leave the territory where you'd test an LLM by e.g. \"create an svg of pelican on a bicycle\". As one id",
+                "summary": "We're starting to leave the territory where you'd test an LLM by e.g. \"create an svg of pelican on a bicycle\". As one idea to generalize it, I was interested what Opus 5 would do if I gave it the first paragraph of the Lord of the Rings, a 1M token budget (~$10) and asked for three js render of it. Opus went off for ~2 hours and wrote 5500 lines of code that (procedurally) rendered the story. It's kind of janky but fun. But it's a bit mindboggling that the LLM has to place and orchestrate various polygon assets in (x,y,z) coordinates and write code that animates it all, and that it even does anything at all.\n\nI also like this kind of examples because no one in their right mind would ever spend the time to write something this custom but LLMs have all the stamina and patience in the world, so it's an example where we go from \"no one would ever do this\" to \"sure, why not, it's ~free\". There might be a lot more. But I'm excited about creating hyper custom worlds that you can imagine dropping players into, e.g. here to participate in the LoTR story as a spectator NPC, or one of the characters, or etc. Something like an ephemeral GTA of X on demand.\n\nLast thought is that the domain of worlds/games exposes a weakness in LLMs: they can't easily audit their work because they aren't able to efficiently and natively perceive videos or play games within them. Here, Opus 5 had to very slowly and painstakingly take screenshots at different points, and it messed up a few times and created a bunch of jank. An example of raw capability (multimodal, gameplay) that I think is still quite lacking.",
+                "url": "https://x.com/karpathy/status/2083749667410727319",
+                "source": "@karpathy",
+                "date": "Sun Aug 02 03:00:09 +0000 2026",
+                "metrics": {
+                  "favorites": 29781,
+                  "retweets": 2318,
+                  "views": "6300621"
+                }
+              },
+              {
+                "title": "More on the pelican on the bicycle test from @simonw:",
+                "summary": "More on the pelican on the bicycle test from @simonw:\nhttps://t.co/OXmtODyTKj\n\nI uploaded the source here so it's playable in the browser, forkable etc.\nhttps://t.co/w3Nctc888d\n\nLook out for GTA Hobbiton dropping before GTA VI :)",
+                "url": "https://x.com/karpathy/status/2083948654377996480",
+                "source": "@karpathy",
+                "date": "Sun Aug 02 16:10:51 +0000 2026",
+                "metrics": {
+                  "favorites": 1001,
+                  "retweets": 70,
+                  "views": "591658"
+                }
+              },
+              {
+                "title": "One pattern I find useful for working with LLMs is a nice long ramble session. Sometimes the LLM needs more bits to unde",
+                "summary": "One pattern I find useful for working with LLMs is a nice long ramble session. Sometimes the LLM needs more bits to understand what you're trying to achieve, but you're too lazy to type them. In these cases I like to lean back, switch to /voice and just ramble for like 10 minutes, total mess, anything goes, full stream of consciousness. Sometimes I declare it up top, something like \"switching to speech recognition sorry for any typos...\". Sometimes I turn it into a small interview of a few turns. But I find that the LLMs are somehow very good at reconstructing long incoherent rambles and often their echo of your own tangle of thoughts comes out quite a bit cleaner than what you started with. The result is that you improve the mind meld and have to correct things less from that point on.",
+                "url": "https://x.com/karpathy/status/2079610838143623371",
+                "source": "@karpathy",
+                "date": "Tue Jul 21 16:53:55 +0000 2026",
+                "metrics": {
+                  "favorites": 50325,
+                  "retweets": 4052,
+                  "views": "4471502"
+                }
+              },
+              {
+                "title": "RT @jarredsumner: Rewriting Bun in Rust",
+                "summary": "RT @jarredsumner: Rewriting Bun in Rust\n\nhttps://t.co/Rl8bcaxBFc",
+                "url": "https://x.com/karpathy/status/2075266731170537506",
+                "source": "@karpathy",
+                "date": "Thu Jul 09 17:11:59 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1093,
+                  "views": "40706"
+                }
+              },
+              {
+                "title": "RT @petergostev: I spent a LOT of time through the hardest 3D prompts at Fable, it is a 45 min video, but I have 60+ ver",
+                "summary": "RT @petergostev: I spent a LOT of time through the hardest 3D prompts at Fable, it is a 45 min video, but I have 60+ very cool demos for yo…",
+                "url": "https://x.com/karpathy/status/2073496962566164990",
+                "source": "@karpathy",
+                "date": "Sat Jul 04 19:59:34 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 169,
+                  "views": "40696"
+                }
+              },
+              {
+                "title": "RT @Etched: We're coming out of stealth.",
+                "summary": "RT @Etched: We're coming out of stealth.\n\nWe've built our first racks after a successful A0 tapeout, $1B+ in customer contracts, and $800m…",
+                "url": "https://x.com/karpathy/status/2072051876816945486",
+                "source": "@karpathy",
+                "date": "Tue Jun 30 20:17:18 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 957,
+                  "views": "41084"
+                }
+              },
+              {
+                "title": "RT @EngramLab: https://t.co/CGIef5lIBI",
+                "summary": "RT @EngramLab: https://t.co/CGIef5lIBI",
+                "url": "https://x.com/karpathy/status/2069579404163031082",
+                "source": "@karpathy",
+                "date": "Wed Jun 24 00:32:35 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 255,
+                  "views": "39813"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multiturn_explicit_send_rejection",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "guardrail_explicit_rejection_no_tool",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng từ chối xác nhận ('Không đồng ý đăng') -> Tuyệt đối KHÔNG được gọi send, dừng lại không gọi tool."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin tổng hợp này lên Telegram giúp tôi"
+        },
+        {
+          "role": "user",
+          "content": "Không, tôi không đồng ý đăng đâu, hủy lệnh gửi tin đi nhé"
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Đã hiểu. Tôi sẽ hủy lệnh gửi tin. Nếu bạn cần hỗ trợ gì khác, hãy cho tôi biết!",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_multiturn_three_step_switch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_complex_three_step_switch",
+        "difficulty": "hard",
+        "what_it_tests": "Chuyển đổi 3 bước (Wiki -> Twitter -> Web News): Lượt cuối dứt khoát bỏ Twitter, chỉ gọi lookup cho Turing Award trong năm nay (timeframe='year')."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra cứu tiểu sử Alan Turing trên Wikipedia"
+        },
+        {
+          "role": "user",
+          "content": "Giờ tìm xem trên Twitter mọi người đang bàn gì về bộ phim The Imitation Game"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter đi, tìm các bài báo tin tức trên web về giải thưởng Turing Award trong năm nay"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Turing Award",
+              "topic": "news",
+              "timeframe": "year"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Turing Award",
+              "topic": "news",
+              "timeframe": "year"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Turing Award",
+            "topic": "news",
+            "timeframe": "year"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Turing Award",
+            "topic": "news",
+            "timeframe": "year",
+            "items": [
+              {
+                "title": "Quantum physicists Charles Bennett and Gilles Brassard win $1m Turing Award – Physics World",
+                "url": "https://physicsworld.com/a/quantum-physicists-charles-bennett-and-gilles-brassard-win-1m-turing-award",
+                "source": "physicsworld.com",
+                "summary": "The Turing Award, often referred to as the “Nobel Prize in Computing,” is awarded by the Association for Computing Machinery (ACM) and carries a $1m prize. The award is named after Alan Turing, the British mathematician who formulated the mathematical basis of computing.\n\nFor over 40 years, Bennett and Brassard have played a crucial role in the foundations of quantum information science, in particular establing a quantum cryptography protocol in the 1980s. [...] The quantum physicists Charles Bennett and Gilles Brassard have been awarded the 2025 ACM Turing Award “for their essential role in establishing the foundations of quantum information science and transforming secure communication and computing”. [...] Classical cryptography today is a vital part of computer and communication networks, protecting everything from business e-mails to bank transactions.\n\nInformation is kept secret using an encryption algorithm together with a secret “key” that the sender uses to scramble a message into a form that cannot be understood by an eavesdropper. The recipient then uses the same key with a decryption algorithm to read the message.",
+                "score": 0.9121316
+              },
+              {
+                "title": "Quantum pioneers win Turing Award for encryption breakthrough",
+                "url": "https://www.bbc.com/news/articles/c7474004g01o",
+                "source": "bbc.com",
+                "summary": "The Turing Award, named after the mathematician and code-breaker Alan Turing, is known as the \"Nobel Prize of computing\". It comes with a $1m (£800,000) prize.\n\nBennett, 82, is a fellow at technology company IBM in New York, while Brassard, 70, is a professor at the University of Montreal. The pair met by chance whilst attending an academic conference in Puerto Rico in 1979. [...] # Quantum pioneers win Turing Award for encryption breakthrough\n\nIBM / Hatim Kaghat via the Association for Computing Machinery A composite image shows headshots of Charles Bennett wearing a blue shirt and glasses on the left and Gilles Brassard wearing a red shirt and glasses on the right.\n\nA US physicist and a Canadian computer scientist have won this year's Turing Award for their invention of a form of seemingly unbreakable encryption. [...] Charles H Bennett and Gilles Brassard's work, which dates back to 1984, is known as quantum cryptography and has \"redefined secure communication and computing\", the award's body said.\n\nScientists believe their work will be central to electronic communications in a world that depends heavily on data-sharing, but which for years has been trying to develop more powerful quantum computers.",
+                "score": 0.8660535
+              },
+              {
+                "title": "Alum Gilles Brassard receives Turing Award, highest CS honor | Cornell Chronicle",
+                "url": "https://news.cornell.edu/stories/2026/03/alum-gilles-brassard-receives-turing-award-highest-cs-honor",
+                "source": "news.cornell.edu",
+                "summary": "Gilles Brassard\n\nCommonly referred to as the “Nobel Prize of computing,” the Turing Award comes with a $1 million prize. It is named for Alan M. Turing, the British mathematician and parent of theoretical computer science. [...] Gilles Brassard, Ph.D. ’79, has received the 2025 A.M. Turing Award from the Association for Computing Machinery (ACM), jointly with Charles Bennett, for founding the field of quantum information science and for new encryption technology for secure communication and computing.\n\nGilles Brassard \n\nCredit: Hatim Kaghat/Provided\n\nGilles Brassard [...] science – a tradition exemplified by his adviser, John Hopcroft.”",
+                "score": 0.8364614
+              },
+              {
+                "title": "Quantum Cryptography Pioneers Win Turing Award | Quanta Magazine",
+                "url": "https://www.quantamagazine.org/quantum-cryptography-pioneers-win-turing-award-20260318",
+                "source": "quantamagazine.org",
+                "summary": "Bennett and Brassard have now been named the winners of the A.M. Turing Award, one of the highest honors in computing, for “their essential role in establishing the foundations of quantum information science and transforming secure communication and computing.” The award comes with a $1 million prize.",
+                "score": 0.81204927
+              },
+              {
+                "title": "IBM’s Charles H. Bennett earns ACM Turing award - IBM Research",
+                "url": "https://research.ibm.com/blog/2025-turing-award",
+                "source": "research.ibm.com",
+                "summary": "The 2025 ACM A.M. Turing Award recognizes the convergence of those questions with a broader scientific consensus. In honoring Bennett and Brassard, the award marks the emergence of quantum information science as a vital discipline—one that has reframed long‑standing puzzles in physics and computation, and laid the conceptual groundwork for technologies now beginning to take shape. [...] The award recognizes their groundbreaking work, which helped establish the field of quantum information science, and which laid the conceptual foundations for quantum cryptography, entanglement‑based protocols, and quantum computing. However, in Bennett’s telling, the honor isn’t really about his individual accomplishments or his collaboration with Brassard. It’s about underlining the importance of ideas he’s spent nearly half a century advancing. [...] “This award establishes the importance both in theory and in practice of studying the physics of information processing,” he said. “The idea that computing and communication and storage of information are an important field of science, which you should understand for its own right and for its applications, most of which are probably yet to be discovered.”\n\nblog_40-year-anniversary-of-the-physics-of-computation-conference.png",
+                "score": 0.8088086
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multiturn_timeframe_carryover",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_timeframe_topic_carryover",
+        "difficulty": "medium",
+        "what_it_tests": "Đổi chủ đề sang chất bán dẫn (semiconductors), carryover timeframe='week' và topic='news'."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin tức AI trong tuần này có gì mới?"
+        },
+        {
+          "role": "user",
+          "content": "Thế còn tin tức về chất bán dẫn (semiconductors) thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tìm chất bán dẫn thôi, vẫn giữ khung thời gian trong tuần này nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "semiconductors",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "semiconductors",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "semiconductors",
+            "topic": "news",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "semiconductors",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "From Germanium To Diamond: The Many Shapes Of Semiconductors | Hackaday",
+                "url": "https://hackaday.com/2026/11/04/from-germanium-to-diamond-the-many-shapes-of-semiconductors",
+                "source": "hackaday.com",
+                "summary": "Although semiconductor technology works on very different principles than vacuum tubes and relay-based electromechanical systems, ultimately the goal is the same. This being to make electrons go to certain place when and where you want them to go there. In the case of semiconductors this is achieved through n-type and p-type materials, which are areas in the semiconductor material which display different electron mobility behavior. [...] These letters refer to whether they hold a negative or positive charge, effectively whether this semiconductor material is an acceptor (p-type) or a donor (n-type) of electrons. It’s not required to dope the base material to create both n- and p-type areas, which led to many variations just within the metal-oxide-semiconductor (MOS) family, including the n-type MOSFET-based NMOS, p-type MOSFET-based PMOS and the complementary CMOS that uses both types. [...] The primary reason why silicon is the most-used semiconductor material today has less to do with it being a good base material and more with it being both plentiful, cheap and easy to process. The silicon dioxide (SiO2) that forms the pure silicon crystals is the main constituent of sand where it’s called quartz. It will readily melt and can be drawn into very large crystals that can subsequently be cut up into the silicon wafer on which semiconductor circuits can be etched.",
+                "score": 0.67321366
+              },
+              {
+                "title": "Semiconductors Are Still Cyclical, But With A Bullish Long-Term Trend",
+                "url": "https://www.yardeniquicktakes.com/semiconductors-are-still-cyclical-but-with-a-bullish-long-term-trend",
+                "source": "yardeniquicktakes.com",
+                "summary": "The AI boom has created an extraordinary imbalance between chip demand and supply, fueling surging semiconductor prices, revenues, earnings, and stock prices alike. But a key divergence has emerged recently. Forward earnings growth for the companies in the S&P 500 Semiconductors industry has soared to 175% y/y, while the gains in the industry's stock index plummeted from 130% y/y earlier this year to 9% currently (chart). Historically, the y/y percent change in the Semiconductor stock price [...] One physical constraint is expanding semiconductor manufacturing capacity, which should gradually increase supply. As the gap between demand and supply narrows, pricing power and profit margins could come under pressure. That would slow earnings growth.",
+                "score": 0.51662046
+              },
+              {
+                "title": "Engineers develop the world's first megawatt ultra-wide bandgap semiconductor module",
+                "url": "https://techxplore.com/news/2026-11-world-megawatt-ultra-wide-bandgap.html",
+                "source": "techxplore.com",
+                "summary": "## High voltage, difficult heat management\n\nPower semiconductor devices act as the \"switches\" that control and convert electricity in modern systems, from AI data centers and electric vehicles to renewable-energy systems and power grids. Conventional silicon devices are approaching their physical limits, while newer wide-bandgap semiconductors such as silicon carbide and gallium nitride have enabled major improvements in efficiency and power density. [...] Gallium oxide belongs to an emerging class of materials known as UWBG semiconductors. Its ability to withstand extremely high electric fields makes it highly attractive for future high-voltage electronics. However, practical Ga₂O₃ devices have historically been limited to relatively low power because the material does not conduct heat efficiently and because packaging multiple devices together becomes increasingly difficult at high voltage and current. [...] Researchers from the Department of Electrical and Computer Engineering under the Faculty of Engineering at the University of Hong Kong (HKU) and the Center for Advanced Semiconductors and Integrated Circuits (CASIC) have developed an ultra-wide bandgap (UWBG) semiconductor gallium oxide (Ga₂O₃) power module capable of handling megawatt-level power conversion, opening new possibilities for compact and highly efficient power systems in areas such as power grids, medical equipment and fusion",
+                "score": 0.48294178
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "TV4_duckduckgo_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Explicit DuckDuckGo source, news topic, week filter and result count."
+      },
+      "input": "Use DuckDuckGo to find 3 news items about AI this week. Use exactly AI as the query.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "duckduckgo_search",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "duckduckgo_search",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "duckduckgo_search",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "week",
+            "max_results": 3
+          },
+          "result": {
+            "tool": "duckduckgo_search",
+            "error": "DDGSException",
+            "message": "No results found."
+          }
+        }
+      ]
+    },
+    {
+      "id": "TV4_out_of_scope_python",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Coding requests must not trigger research tools; manually review the refusal text."
+      },
+      "input": "Write Python code implementing quicksort for me.",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "I'm unable to provide coding assistance directly. However, I can explain how the quicksort algorithm works or guide you through the implementation process if you'd like!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "TV4_out_of_scope_math_switch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "The latest out-of-scope math request cancels earlier search intent; manually review the refusal."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "I want to find AI news on DuckDuckGo."
+        },
+        {
+          "role": "user",
+          "content": "Cancel the news search. Just compute the integral of x squared for me."
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "I'm unable to assist with computing integrals or any mathematical problems. If you have any other questions or need assistance with something else, feel free to ask!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    }
+  ]
+}

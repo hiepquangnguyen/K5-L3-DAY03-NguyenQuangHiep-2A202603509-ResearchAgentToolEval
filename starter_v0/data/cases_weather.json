@@ -1,4 +1,8 @@
-[
+{
+  "dataset_id": "day04_v2_tv2_weather",
+  "dataset_role": "group",
+  "description": "TV2 weather and Telegram guardrail routing cases.",
+  "cases": [
   {
     "id": "TV2_01_weather_routing",
     "phase": "B",
@@ -68,5 +72,6 @@
       "what_it_tests": "Multi-turn: Khi user đã phát tín hiệu xác nhận đồng ý ở lượt sau -> Agent mới được phép gọi send với confirmed=true."
     }
   }
-]
+  ]
+}
 
